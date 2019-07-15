@@ -12,6 +12,17 @@ public class ArticleRepository {
     private final List<Article> articles = new ArrayList<>();
     private int nextArticleNumber = 0;
 
+    public Article find(final int articleId) {
+        int index = Math.min(articleId, this.articles.size()) - 1;
+        for (; index >= 0; index--) {
+            Article target = this.articles.get(index);
+            if (target.getNumber() == articleId) {
+                return target;
+            }
+        }
+        throw new NoArticleFoundException();
+    }
+
     public Article write(final Article article) {
         if (!article.validateCoverUrl()) {
             article.setCoverUrl(defaultCoverUrl);
@@ -21,21 +32,12 @@ public class ArticleRepository {
         return article;
     }
 
-    public Article find(final int articleId) {
-        return this.articles.get(findIndexOfArticleById(articleId));
+    public Article edit(final Article edited, final int articleId) {
+        return find(articleId).update(edited);
     }
 
-    private int findIndexOfArticleById(final int articleId) {
-        int index = Math.min(articleId, this.articles.size()) - 1;
-        for (; index >= 0; index--) {
-            if (this.articles.get(index).getNumber() == articleId) {
-                break;
-            }
-        }
-        if (index < 0) {
-            throw new NoArticleFoundException();
-        }
-        return index;
+    public void delete(final int articleId) {
+        this.articles.remove(find(articleId));
     }
 
     public List<Article> findAll() {
@@ -44,13 +46,5 @@ public class ArticleRepository {
 
     public int nextArticleNumber() {
         return ++nextArticleNumber;
-    }
-
-    public Article edit(final Article edited, final int articleId) {
-        return find(articleId).update(edited);
-    }
-
-    public void delete(final int articleId) {
-        this.articles.remove(findIndexOfArticleById(articleId));
     }
 }

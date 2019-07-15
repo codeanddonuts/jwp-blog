@@ -16,19 +16,19 @@ public class Article implements Comparable<Article> {
 
     public Article() {}
 
-    public int getNumber() {
-        return this.number;
+    public Article update(Article toUpdate) {
+        this.title = toUpdate.title;
+        this.coverUrl = toUpdate.coverUrl;
+        this.contents = toUpdate.contents;
+        return this;
     }
 
     public void numbering(ArticleRepository repo) {
         this.number = repo.nextArticleNumber();
     }
 
-    public Article update(Article toUpdate) {
-        this.title = toUpdate.title;
-        this.coverUrl = toUpdate.coverUrl;
-        this.contents = toUpdate.contents;
-        return this;
+    public int getNumber() {
+        return this.number;
     }
 
     public String getTitle() {
