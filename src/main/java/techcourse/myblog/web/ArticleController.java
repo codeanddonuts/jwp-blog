@@ -28,19 +28,19 @@ public class ArticleController {
     @ResponseBody
     @PostMapping("/articles")
     public RedirectView confirmWrite(final Article article) {
-        articleRepository.write(article);
-        return new RedirectView("/articles/" + article.getNumber());
+        articleRepository.save(article);
+        return new RedirectView("/articles/" + article.getId());
     }
 
     @GetMapping("/articles/{articleId}")
-    public String viewArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
+    public String viewArticle(@PathVariable final long articleId, final Model model) {
+        model.addAttribute("article", articleRepository.findById(articleId).get());
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String editArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
+    public String editArticle(@PathVariable final long articleId, final Model model) {
+        model.addAttribute("article", articleRepository.findById(articleId).get());
         model.addAttribute("url", "/articles/" + articleId);
         return "article-edit";
     }
@@ -48,14 +48,14 @@ public class ArticleController {
     @ResponseBody
     @PutMapping("/articles/{articleId}")
     public RedirectView confirmEdit(@PathVariable final int articleId, final Article article) {
-        articleRepository.edit(article, articleId);
+        articleRepository.save(article.setId(articleId));
         return new RedirectView("/articles/" + articleId);
     }
 
     @ResponseBody
     @DeleteMapping("/articles/{articleId}")
-    public RedirectView deleteArticle(@PathVariable final int articleId) {
-        articleRepository.delete(articleId);
+    public RedirectView deleteArticle(@PathVariable final long articleId) {
+        articleRepository.deleteById(articleId);
         return new RedirectView("/");
     }
 }

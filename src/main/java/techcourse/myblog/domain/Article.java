@@ -1,16 +1,26 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Optional;
 
-public class Article implements Comparable<Article> {
-    private int number;
+@Entity
+public class Article {
+    private static final String defaultCoverUrl = "images/pages/index/study.jpg";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     private String title;
     private String coverUrl;
     private String contents;
 
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
-        this.coverUrl = coverUrl;
+        this.coverUrl = validateCoverUrl(coverUrl);
         this.contents = contents;
     }
 
@@ -18,17 +28,24 @@ public class Article implements Comparable<Article> {
 
     public Article update(Article toUpdate) {
         this.title = toUpdate.title;
-        this.coverUrl = toUpdate.coverUrl;
+        this.coverUrl = validateCoverUrl(toUpdate.coverUrl);
         this.contents = toUpdate.contents;
         return this;
     }
 
-    public void numbering(ArticleRepository repo) {
-        this.number = repo.nextArticleNumber();
+    private String validateCoverUrl(String coverUrl) {
+        return Optional.ofNullable(coverUrl)
+                        .filter(x -> x.length() > 0)
+                        .orElse(defaultCoverUrl);
     }
 
-    public int getNumber() {
-        return this.number;
+    public long getId() {
+        return this.id;
+    }
+
+    public Article setId(long id) {
+        this.id = id;
+        return this;
     }
 
     public String getTitle() {
@@ -44,7 +61,7 @@ public class Article implements Comparable<Article> {
     }
 
     public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
+        this.coverUrl = validateCoverUrl(coverUrl);
     }
 
     public String getContents() {
@@ -53,14 +70,5 @@ public class Article implements Comparable<Article> {
 
     public void setContents(String contents) {
         this.contents = contents;
-    }
-
-    public boolean validateCoverUrl() {
-        return Optional.ofNullable(this.coverUrl).filter(x -> x.length() > 0)
-                                                .map(x -> true)
-                                                .orElse(false);
-    }
-    public int compareTo(Article rhs) {
-        return this.number - rhs.number;
     }
 }

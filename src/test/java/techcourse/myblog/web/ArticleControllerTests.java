@@ -51,7 +51,7 @@ public class ArticleControllerTests {
 
     @Test
     void viewArticleTest() {
-        articleRepository.write(new Article());
+        articleRepository.save(new Article());
         webTestClient.get().uri("/articles/2/")
                         .exchange()
                         .expectStatus().isOk();
@@ -59,7 +59,7 @@ public class ArticleControllerTests {
 
     @Test
     void editArticleTest() {
-        articleRepository.write(new Article());
+        articleRepository.save(new Article());
         webTestClient.get().uri("/articles/1/edit/")
                         .exchange()
                         .expectStatus().isOk();
@@ -71,7 +71,7 @@ public class ArticleControllerTests {
         String coverUrl = "링크link";
         String contents = "내용content";
 
-        articleRepository.write(new Article());
+        articleRepository.save(new Article());
         webTestClient.put().uri("/articles/1/")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(BodyInserters.fromFormData("title", title)
@@ -83,7 +83,7 @@ public class ArticleControllerTests {
 
     @Test
     void deleteArticleTest() {
-        articleRepository.write(new Article());
+        articleRepository.save(new Article());
         webTestClient.delete().uri("/articles/1/")
                             .exchange()
                             .expectStatus().is3xxRedirection();
