@@ -16,7 +16,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public Optional<Article> maybeArticle(long articleId) {
+    public Optional<Article> getArticle(long articleId) {
         return articleRepository.findById(articleId);
     }
 
@@ -29,13 +29,13 @@ public class ArticleService {
     }
 
     @Transactional
-    public void tryUpdate(long articleId, Article toUpdate) {
+    public void update(long articleId, Article toUpdate) {
         articleRepository.findById(articleId).filter(article -> article.isSameAuthor(toUpdate))
                                             .ifPresent(original -> original.update(toUpdate));
     }
 
     @Transactional
-    public void tryDelete(long articleId, User user) {
+    public void delete(long articleId, User user) {
         articleRepository.findById(articleId).filter(article -> article.isSameAuthor(user))
                                             .ifPresent(article -> articleRepository.deleteById(articleId));
     }

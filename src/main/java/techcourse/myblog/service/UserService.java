@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
-import techcourse.myblog.web.exception.*;
+import techcourse.myblog.controller.exception.*;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -20,7 +20,7 @@ public class UserService {
         return userRepository.findByEmail(email).get();
     }
 
-    public void tryLogin(String email, String password, HttpSession session) {
+    public void login(String email, String password, HttpSession session) {
         userRepository.findByEmail(email)
                      .filter(user -> user.authenticate(password))
                      .map(user -> {
@@ -34,7 +34,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void tryRegister(String name, String email, String password) {
+    public void register(String name, String email, String password) {
         userRepository.findByEmail(email).map(ifSameEmailExists -> {
                                                 throw new EmailAlreadyTakenSignupException();
                                             }).orElseGet(() -> {
@@ -48,7 +48,7 @@ public class UserService {
     }
 
     @Transactional
-    public void tryUpdate(String editedName, String editedEmail, String currentEmail) {
+    public void update(String editedName, String editedEmail, String currentEmail) {
         if (!editedEmail.equals(currentEmail) && userRepository.findByEmail(editedEmail).isPresent()) {
             throw new EmailAlreadyTakenProfileEditException();
         }

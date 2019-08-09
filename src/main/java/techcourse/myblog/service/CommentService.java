@@ -25,7 +25,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment tryUpdate(long commentId, String contents, User author) {
+    public Comment update(long commentId, String contents, User author) {
         return commentRepository.findById(commentId).filter(comment -> comment.isSameAuthor(author))
                                                     .map(comment -> comment.setContents(contents))
                                                     .orElse(null);
